@@ -57,12 +57,26 @@
 - 빌드 없음: 최종 HTML/CSS/JS/자산을 해당 위치에 복사 후 푸시.
 - 커스텀 도메인 사용 시 `docs/CNAME` 추가.
 
+### 배포 절차 (예시: docs 사용)
+1) `docs/` 디렉터리를 만들고 정적 파일을 복사  
+   - `mkdir -p docs && cp index.html styles.css main.js devserver.js README.md docs/`  
+   - `cp -r lib docs/` (필요 시 `assets/` 포함)
+2) GitHub Pages 설정: 리포 Settings → Pages → Source: `Deploy from a branch` → Branch: `main` / Folder: `/docs`.
+3) 저장 후 안내된 URL로 접속. 커스텀 도메인은 `docs/CNAME`에 도메인명 추가 후 다시 푸시.
+4) 캐시 무효화를 위해 필요 시 새로고침(또는 쿼리 파라미터) 후 동작 확인.
+
+### 배포 절차 (대안: gh-pages 브랜치)
+1) 정적 파일을 `gh-pages` 브랜치 루트에 두고 푸시.
+2) Settings → Pages → Source: `Deploy from a branch` → Branch: `gh-pages` / Folder: `/` 선택.
+3) 동일하게 URL에서 동작 확인.
+
 ## TODO 체크리스트
-- [ ] 디자인 토큰 결정(배경/라인/돌 색, 폰트, 모바일 보드 크기).
-- [ ] 게임 로직: 착수/언두/리셋, 승리/금수 판정.
-- [ ] 렌더: 캔버스 초기화, 좌표 매핑, 마지막 착수 하이라이트, 리사이즈 대응.
-- [ ] UI: 턴/상태 표시, 리셋/언두/옵션, 금수/보드 크기/AI 설정, 링크 복사.
+- [x] 디자인 토큰 결정(배경/라인/돌 색, 폰트, 모바일 보드 크기).
+- [x] 게임 로직: 착수/언두/리셋, 승리/금지 수 판정(단순화).
+- [x] 렌더: 캔버스 초기화, 좌표 매핑, 마지막 착수 하이라이트, 리사이즈 대응.
+- [x] UI: 턴/상태 표시, 리셋/언두/옵션(금지 수/보드 크기/AI).
+- [ ] 공유/퍼머링크: 링크 복사, 옵션 쿼리 로드.
 - [ ] 접근성/국제화: ARIA/포커스, 키보드 지원, 문자열 분리.
-- [ ] AI: 랜덤 → 휴리스틱 →(선택) 미니맥스 depth 2-3.
+- [ ] AI 고도화: 휴리스틱/미니맥스 depth 2-3.
 - [ ] 테스트: 핵심 로직 브라우저 단위 테스트.
 - [ ] GitHub Pages 배포: `docs/` 또는 `gh-pages`로 정적 파일 올리기, 필요 시 `CNAME`.
