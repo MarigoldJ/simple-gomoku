@@ -23,8 +23,8 @@
     --accent: #5d9bff;
     --accent-strong: #3f7cd6;
     --border: #2c2c2c;
-  --board-wood: #c5954d;
-  --board-line: #3a2a10;
+    --board-wood: #c5954d;
+    --board-line: #3a2a10;
     --stone-black: #0c0c0c;
     --stone-white: #f2f2f2;
     color-scheme: dark;

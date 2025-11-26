@@ -1,7 +1,7 @@
 import { availableMoves, checkWinner, STONES } from "./game.js";
 
 export function chooseAiMove(state) {
-  const { board, size, aiSide, forbidden } = state;
+  const { board, size, aiSide } = state;
   const moves = availableMoves(board, size);
   if (!moves.length) return null;
 
@@ -22,7 +22,7 @@ export function chooseAiMove(state) {
     return da - db;
   });
 
-  // 4) Random among top 8 candidates
+  // 4) Random among top candidates
   const pickCount = Math.min(8, moves.length);
   const idx = Math.floor(Math.random() * pickCount);
   return moves[idx];

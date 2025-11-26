@@ -17,15 +17,16 @@
 - 브라우저 저장/URL 쿼리로 옵션 로드, 외부 라이브러리 최소화.
 
 ## 파일 구조(안)
-- `index.html` : 엔트리, 마크업, 모달/컨트롤 영역.
-- `styles.css` : 색/폰트 변수, 레이아웃, 반응형.
-- `main.js` : 초기화, 이벤트 바인딩, 옵션 로드/저장.
-- `lib/game.js` : 상태 구조, 착수/언두/리셋, 승패·금수 판정.
-- `lib/render.js` : 캔버스 초기화, DPR 스케일, 클릭→좌표 매핑, 그리기.
-- `lib/state.js` : 전역 상태/옵션 관리, 간단한 구독/알림 함수.
-- `lib/ai.js` : 랜덤 AI, 필요시 휴리스틱/미니맥스(depth 2-3) 확장.
-- `assets/` : 파비콘 등 정적 자산.
+- `src/index.html` : 엔트리, 마크업, 모달/컨트롤 영역.
+- `src/styles.css` : 색/폰트 변수, 레이아웃, 반응형.
+- `src/main.js` : 초기화, 이벤트 바인딩, 옵션 로드/저장.
+- `src/lib/game.js` : 상태 구조, 착수/언두/리셋, 승패·금수 판정.
+- `src/lib/render.js` : 캔버스 초기화, DPR 스케일, 클릭→좌표 매핑, 그리기.
+- `src/lib/state.js` : 전역 상태/옵션 관리, 간단한 구독/알림 함수.
+- `src/lib/ai.js` : 랜덤 AI, 필요시 휴리스틱/미니맥스(depth 2-3) 확장.
+- `assets/` : 파비콘 등 정적 자산(필요시).
 - `tests/`(선택) : 브라우저에서 Mocha+Chai CDN으로 로직 단위 테스트 실행.
+- `.github/workflows/gh-pages.yml` : `src/`를 GitHub Pages에 배포하는 워크플로.
 
 ## 상태 및 렌더 설계
 - 상태: `board`(1D 배열), `size`, `currentPlayer`, `history`(스택), `forbiddenEnabled`, `aiLevel`, `mode`, `winner`.
@@ -57,18 +58,10 @@
 - 빌드 없음: 최종 HTML/CSS/JS/자산을 해당 위치에 복사 후 푸시.
 - 커스텀 도메인 사용 시 `docs/CNAME` 추가.
 
-### 배포 절차 (예시: docs 사용)
-1) `docs/` 디렉터리를 만들고 정적 파일을 복사  
-   - `mkdir -p docs && cp index.html styles.css main.js devserver.js README.md docs/`  
-   - `cp -r lib docs/` (필요 시 `assets/` 포함)
-2) GitHub Pages 설정: 리포 Settings → Pages → Source: `Deploy from a branch` → Branch: `main` / Folder: `/docs`.
-3) 저장 후 안내된 URL로 접속. 커스텀 도메인은 `docs/CNAME`에 도메인명 추가 후 다시 푸시.
-4) 캐시 무효화를 위해 필요 시 새로고침(또는 쿼리 파라미터) 후 동작 확인.
-
-### 배포 절차 (대안: gh-pages 브랜치)
-1) 정적 파일을 `gh-pages` 브랜치 루트에 두고 푸시.
-2) Settings → Pages → Source: `Deploy from a branch` → Branch: `gh-pages` / Folder: `/` 선택.
-3) 동일하게 URL에서 동작 확인.
+### 배포 절차 (GitHub Actions, src 그대로)
+1) `.github/workflows/gh-pages.yml` 확인: `src/` 내용을 `_site`로 복사 후 Pages 배포.
+2) 리포 Settings → Pages → Source: `GitHub Actions` 선택.
+3) `main` 브랜치에 푸시하면 워크플로가 실행되어 Pages에 반영. 커스텀 도메인은 루트 `CNAME` 파일로 설정.
 
 ## TODO 체크리스트
 - [x] 디자인 토큰 결정(배경/라인/돌 색, 폰트, 모바일 보드 크기).
@@ -79,4 +72,4 @@
 - [ ] 접근성/국제화: ARIA/포커스, 키보드 지원, 문자열 분리.
 - [ ] AI 고도화: 휴리스틱/미니맥스 depth 2-3.
 - [ ] 테스트: 핵심 로직 브라우저 단위 테스트.
-- [ ] GitHub Pages 배포: `docs/` 또는 `gh-pages`로 정적 파일 올리기, 필요 시 `CNAME`.
+- [x] GitHub Pages 배포 파이프라인 마련: Actions 워크플로로 `src/` → Pages 배포, 필요 시 `CNAME`.
