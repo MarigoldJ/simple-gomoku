@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Gomoku</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot black"></span>
+      <span class="dot white"></span>
+      <span class="title">오목 (Gomoku)</span>
+    </div>
+    <div class="status" id="statusText">흑 차례</div>
+  </header>
+
+  <main class="layout">
+    <section class="board-panel">
+      <canvas id="boardCanvas" aria-label="오목 보드" role="img"></canvas>
+      <div class="hint">격자가 보이지 않으면 새 게임을 눌러 보드를 리셋하세요. 격자 교차점을 클릭/터치하면 흑부터 시작합니다.</div>
+    </section>
+
+    <section class="controls">
+      <div class="control-group">
+        <label for="sizeSelect">보드 크기</label>
+        <select id="sizeSelect">
+          <option value="15">15 x 15</option>
+          <option value="19">19 x 19</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="forbiddenToggle">
+          <input type="checkbox" id="forbiddenToggle">
+          금지 수 적용(흑, 33/44/6목 방지)
+        </label>
+      </div>
+      <div class="control-group">
+        <label for="aiSelect">AI</label>
+        <select id="aiSelect">
+          <option value="off">사용 안 함</option>
+          <option value="easy">쉬움(랜덤)</option>
+        </select>
+      </div>
+      <div class="control-row">
+        <button id="undoBtn" type="button">되돌리기</button>
+        <button id="resetBtn" type="button" class="primary">새 게임</button>
+      </div>
+      <p class="note">
+        금지 수: 흑이 한 번에 열린 3(33)이나 열린 4(44), 6목을 만드는 수를 막는 규칙입니다. 현재 판정은 단순화된 버전입니다.
+      </p>
+    </section>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
