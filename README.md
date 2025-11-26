@@ -1,4 +1,5 @@
 # Simple Gomoku (Vanilla)
+- 접속 링크: https://marigoldj.github.io/simple-gomoku/
 
 ## 폴더 구조
 - `src/` : 개발·배포용 소스(HTML/CSS/JS, lib/*).
