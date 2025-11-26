@@ -7,6 +7,24 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+  <div class="win-banner" id="winBanner">
+    <span id="winText">게임 종료</span>
+    <div class="win-actions">
+      <button id="playAgain" class="primary">새 게임</button>
+      <button id="viewBoard">돌아보기</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="winOverlay" aria-live="polite">
+    <div class="overlay-card">
+      <div class="overlay-title" id="overlayTitle">게임 종료</div>
+      <div class="overlay-sub">새 게임을 눌러 다시 시작하세요.</div>
+      <div class="overlay-actions">
+        <button id="overlayPlay" class="primary">새 게임</button>
+      </div>
+    </div>
+  </div>
+
   <header class="topbar">
     <div class="brand">
       <span class="dot black"></span>

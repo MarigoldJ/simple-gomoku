@@ -45,7 +45,7 @@ export function createRenderer(canvas, getState) {
   };
 
   const draw = () => {
-    const { size, board, lastMove } = getState();
+    const { size, board, lastMove, winnerLine } = getState();
     const { padding, cell, sizePx } = geometry;
     const style = getComputedStyle(document.documentElement);
     const boardColor =
@@ -91,6 +91,23 @@ export function createRenderer(canvas, getState) {
         const py = padding + y * cell;
         drawStone(ctx, px, py, cell * 0.42, stone === 1 ? "black" : "white");
       }
+    }
+
+    if (winnerLine && winnerLine.length) {
+      ctx.save();
+      ctx.strokeStyle = "rgba(255, 215, 0, 0.9)";
+      ctx.lineWidth = Math.max(3, cell * 0.14);
+      ctx.shadowColor = "rgba(255, 213, 0, 0.8)";
+      ctx.shadowBlur = cell * 0.2;
+      ctx.beginPath();
+      winnerLine.forEach((coord, idx) => {
+        const px = padding + coord.x * cell;
+        const py = padding + coord.y * cell;
+        if (idx === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+      ctx.restore();
     }
 
     if (lastMove) {

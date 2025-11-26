@@ -26,9 +26,30 @@ export function checkWinner(board, size, x, y, player) {
     const left = countRun(board, size, x, y, -dx, -dy, player);
     const right = countRun(board, size, x, y, dx, dy, player);
     const total = left + right + 1;
-    if (total >= 5) return true;
+    if (total >= 5) {
+      const startX = x - dx * left;
+      const startY = y - dy * left;
+      const endX = x + dx * right;
+      const endY = y + dy * right;
+      return { won: true, line: buildLineCoords(startX, startY, endX, endY) };
+    }
   }
-  return false;
+  return { won: false, line: null };
+}
+
+function buildLineCoords(sx, sy, ex, ey) {
+  const coords = [];
+  const dx = Math.sign(ex - sx);
+  const dy = Math.sign(ey - sy);
+  let cx = sx;
+  let cy = sy;
+  coords.push({ x: cx, y: cy });
+  while (cx !== ex || cy !== ey) {
+    cx += dx;
+    cy += dy;
+    coords.push({ x: cx, y: cy });
+  }
+  return coords;
 }
 
 function countRun(board, size, x, y, dx, dy, player) {
@@ -115,23 +136,24 @@ export function makeMove(state, x, y) {
     return { ok: false, reason: forbiddenReason, forbidden: true };
   }
 
-  const hasWon = checkWinner(nextBoard, size, x, y, currentPlayer);
+  const { won, line } = checkWinner(nextBoard, size, x, y, currentPlayer);
 
   const history = [
     ...state.history,
     { x, y, player: currentPlayer },
   ];
 
-  const nextPlayer = hasWon ? currentPlayer : currentPlayer === BLACK ? WHITE : BLACK;
+  const nextPlayer = won ? currentPlayer : currentPlayer === BLACK ? WHITE : BLACK;
 
   return {
     ok: true,
     board: nextBoard,
     history,
-    winner: hasWon ? currentPlayer : 0,
+    winner: won ? currentPlayer : 0,
+    winnerLine: won ? line : null,
     currentPlayer: nextPlayer,
     lastMove: { x, y, player: currentPlayer },
-    message: hasWon
+    message: won
       ? (currentPlayer === BLACK ? "흑" : "백") + " 승리!"
       : (nextPlayer === BLACK ? "흑" : "백") + " 차례",
   };
@@ -148,6 +170,7 @@ export function resetGame(size, forbidden = false, aiLevel = "off", aiSide = WHI
     aiLevel,
     aiSide,
     lastMove: null,
+    winnerLine: null,
     message: "흑 차례",
   };
 }
@@ -168,6 +191,7 @@ export function undoMove(state) {
     history: newHistory,
     currentPlayer: prevPlayer,
     winner: 0,
+    winnerLine: null,
     lastMove,
     message,
   };

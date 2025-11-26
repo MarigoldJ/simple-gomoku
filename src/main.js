@@ -10,6 +10,13 @@ const forbiddenToggle = document.getElementById("forbiddenToggle");
 const aiSelect = document.getElementById("aiSelect");
 const undoBtn = document.getElementById("undoBtn");
 const resetBtn = document.getElementById("resetBtn");
+const winBanner = document.getElementById("winBanner");
+const winText = document.getElementById("winText");
+const playAgain = document.getElementById("playAgain");
+const viewBoard = document.getElementById("viewBoard");
+const winOverlay = document.getElementById("winOverlay");
+const overlayTitle = document.getElementById("overlayTitle");
+const overlayPlay = document.getElementById("overlayPlay");
 
 const store = createState(resetGame(15, false, "off", STONES.WHITE));
 const renderer = createRenderer(canvas, store.get);
@@ -17,11 +24,13 @@ const renderer = createRenderer(canvas, store.get);
 store.subscribe(() => {
   updateStatus();
   updateControls();
+  updateWinUI();
   renderer.draw();
 });
 
 updateStatus();
 updateControls();
+updateWinUI();
 renderer.draw();
 
 window.addEventListener("resize", renderer.resize);
@@ -59,12 +68,22 @@ resetBtn.addEventListener("click", () => {
   applyReset();
 });
 
+playAgain.addEventListener("click", () => applyReset());
+overlayPlay.addEventListener("click", () => applyReset());
+viewBoard.addEventListener("click", () => {
+  hideWinUI();
+});
+
 sizeSelect.addEventListener("change", () => applyReset());
 forbiddenToggle.addEventListener("change", () => applyReset(false));
 aiSelect.addEventListener("change", () => applyReset(false));
 
 function handleMove(x, y) {
   const state = store.get();
+  if (state.winner) {
+    flashStatus("게임이 종료되었습니다. 새 게임을 눌러주세요.", true);
+    return;
+  }
   const result = makeMove(state, x, y);
   if (!result.ok) {
     flashStatus(result.reason, true);
@@ -98,6 +117,7 @@ function applyReset(resetSize = true) {
   const baseState = resetGame(resetSize ? size : store.get().size, forbidden, aiLevel, STONES.WHITE);
   store.set(baseState);
   renderer.resize();
+  hideWinUI();
 }
 
 function updateStatus() {
@@ -111,6 +131,24 @@ function updateControls() {
   forbiddenToggle.checked = !!state.forbidden;
   aiSelect.value = state.aiLevel;
   undoBtn.disabled = state.history.length === 0;
+}
+
+function updateWinUI() {
+  const state = store.get();
+  const active = !!state.winner;
+  winBanner.style.display = active ? "flex" : "none";
+  winOverlay.style.display = active ? "flex" : "none";
+  if (active) {
+    const who = state.winner === STONES.BLACK ? "흑" : "백";
+    const text = `${who} 승리!`;
+    winText.textContent = text;
+    overlayTitle.textContent = text;
+  }
+}
+
+function hideWinUI() {
+  winBanner.style.display = "none";
+  winOverlay.style.display = "none";
 }
 
 function flashStatus(text, isError = false) {
